@@ -307,6 +307,7 @@ module MoSQL
     end
 
     def quote_copy(val)
+      val.to_s.gsub("\\u0000", '')
       case val
       when nil
         "\\N"
