@@ -322,6 +322,8 @@ module MoSQL
       when Sequel::SQL::Blob
         "\\\\x" + [val].pack("h*")
       else
+        val.delete("\000")
+        val.to_s.gsub("\\u0000", '')
         val.to_s.gsub(/([\\\t\n\r])/, '\\\\\\1')
       end
     end
