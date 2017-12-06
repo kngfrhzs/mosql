@@ -250,6 +250,7 @@ module MoSQL
     end
 
     def sanitize(value)
+      log.debug { "sanitize: #{value}" }
       # Base64-encode binary blobs from _extra_props -- they may
       # contain invalid UTF-8, which to_json will not properly encode.
       case value
@@ -290,6 +291,7 @@ module MoSQL
     end
 
     def copy_data(db, ns, objs)
+      log.debug { "copy data: #{objs}" }
       schema = find_ns!(ns)
       db.synchronize do |pg|
         sql = "COPY \"#{schema[:meta][:table]}\" " +
@@ -308,6 +310,7 @@ module MoSQL
     end
 
     def quote_copy(val)
+      log.debug { "quote copy: #{val}" }
       case val
       when nil
         "\\N"
