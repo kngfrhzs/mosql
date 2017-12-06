@@ -248,6 +248,9 @@ module MoSQL
     end
 
     def sanitize(value)
+      value.to_s.gsub("\000",'')
+      value.to_s.gsub("\\u0000", '')
+      value.to_s.gsub("-\\u0000", '')
       # Base64-encode binary blobs from _extra_props -- they may
       # contain invalid UTF-8, which to_json will not properly encode.
       case value
