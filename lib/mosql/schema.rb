@@ -244,13 +244,10 @@ module MoSQL
         row << JSON.dump(extra)
       end
 
-      log.info { "Transformed: #{row.inspect}" }
-
       row
     end
 
     def sanitize(value)
-      log.info { "sanitize: #{value}" }
       # Base64-encode binary blobs from _extra_props -- they may
       # contain invalid UTF-8, which to_json will not properly encode.
       case value
@@ -262,7 +259,6 @@ module MoSQL
         value.map {|v| sanitize(v)}
       when BSON::Binary
         Base64.encode64(value.to_json)
-        log.info { "Test: #{value}" }
       when Float
         # NaN is illegal in JSON. Translate into null.
         value.nan? ? nil : value
@@ -291,7 +287,6 @@ module MoSQL
     end
 
     def copy_data(db, ns, objs)
-      log.info { "copy data: #{objs}" }
       schema = find_ns!(ns)
       db.synchronize do |pg|
         sql = "COPY \"#{schema[:meta][:table]}\" " +
@@ -310,6 +305,9 @@ module MoSQL
     end
 
     def quote_copy(val)
+      val.to_s.gsub("\000",'')
+      val.to_s.gsub("\\u0000", '')
+      val.to_s.gsub("-\\u0000", '')
       log.info { "quote copy: #{val}" }
       case val
       when nil
