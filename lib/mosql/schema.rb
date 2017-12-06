@@ -131,7 +131,7 @@ module MoSQL
         return nil
       end
       unless schema = spec[collection]
-        log.debug("No mapping for ns: #{ns}")
+        log.info("No mapping for ns: #{ns}")
         return nil
       end
       schema
@@ -244,13 +244,13 @@ module MoSQL
         row << JSON.dump(extra)
       end
 
-      log.debug { "Transformed: #{row.inspect}" }
+      log.info { "Transformed: #{row.inspect}" }
 
       row
     end
 
     def sanitize(value)
-      log.debug { "sanitize: #{value}" }
+      log.info { "sanitize: #{value}" }
       # Base64-encode binary blobs from _extra_props -- they may
       # contain invalid UTF-8, which to_json will not properly encode.
       case value
@@ -262,7 +262,7 @@ module MoSQL
         value.map {|v| sanitize(v)}
       when BSON::Binary
         Base64.encode64(value.to_json)
-        log.debug { "Test: #{value}" }
+        log.info { "Test: #{value}" }
       when Float
         # NaN is illegal in JSON. Translate into null.
         value.nan? ? nil : value
@@ -291,7 +291,7 @@ module MoSQL
     end
 
     def copy_data(db, ns, objs)
-      log.debug { "copy data: #{objs}" }
+      log.info { "copy data: #{objs}" }
       schema = find_ns!(ns)
       db.synchronize do |pg|
         sql = "COPY \"#{schema[:meta][:table]}\" " +
@@ -310,7 +310,7 @@ module MoSQL
     end
 
     def quote_copy(val)
-      log.debug { "quote copy: #{val}" }
+      log.info { "quote copy: #{val}" }
       case val
       when nil
         "\\N"
