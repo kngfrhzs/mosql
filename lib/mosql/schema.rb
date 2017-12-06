@@ -260,7 +260,8 @@ module MoSQL
       when Array
         value.map {|v| sanitize(v)}
       when BSON::Binary
-        Base64.encode64(value.to_s)
+        Base64.encode64(value.to_json)
+        log.debug { "Test: #{value}" }
       when Float
         # NaN is illegal in JSON. Translate into null.
         value.nan? ? nil : value
