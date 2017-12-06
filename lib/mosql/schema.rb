@@ -308,7 +308,6 @@ module MoSQL
       val.to_s.gsub("\000",'')
       val.to_s.gsub("\\u0000", '')
       val.to_s.gsub("-\\u0000", '')
-      log.info { "quote copy: #{val}" }
       case val
       when nil
         "\\N"
