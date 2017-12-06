@@ -307,7 +307,6 @@ module MoSQL
     end
 
     def quote_copy(val)
-      val.to_s.gsub("\\u0000", '')
       case val
       when nil
         "\\N"
@@ -322,7 +321,7 @@ module MoSQL
       when Sequel::SQL::Blob
         "\\\\x" + [val].pack("h*")
       else
-        val.delete("\000")
+        val.to_s.gsub("\000",'')
         val.to_s.gsub("\\u0000", '')
         val.to_s.gsub(/([\\\t\n\r])/, '\\\\\\1')
       end
