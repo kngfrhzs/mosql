@@ -131,7 +131,7 @@ module MoSQL
         return nil
       end
       unless schema = spec[collection]
-        log.info("No mapping for ns: #{ns}")
+        log.debug("No mapping for ns: #{ns}")
         return nil
       end
       schema
@@ -244,13 +244,12 @@ module MoSQL
         row << JSON.dump(extra)
       end
 
+      log.debug { "Transformed: #{row.inspect}" }
+
       row
     end
 
     def sanitize(value)
-      value.to_s.gsub("\000",'')
-      value.to_s.gsub("\\u0000", '')
-      value.to_s.gsub("-\\u0000", '')
       # Base64-encode binary blobs from _extra_props -- they may
       # contain invalid UTF-8, which to_json will not properly encode.
       case value
@@ -261,7 +260,7 @@ module MoSQL
       when Array
         value.map {|v| sanitize(v)}
       when BSON::Binary
-        Base64.encode64(value.to_json)
+        Base64.encode64(value.to_s)
       when Float
         # NaN is illegal in JSON. Translate into null.
         value.nan? ? nil : value
@@ -308,9 +307,6 @@ module MoSQL
     end
 
     def quote_copy(val)
-      val.to_s.gsub("\000",'')
-      val.to_s.gsub("\\u0000", '')
-      val.to_s.gsub("-\\u0000", '')
       case val
       when nil
         "\\N"
@@ -325,8 +321,6 @@ module MoSQL
       when Sequel::SQL::Blob
         "\\\\x" + [val].pack("h*")
       else
-        val.to_s.gsub("\000",'')
-        val.to_s.gsub("\\u0000", '')
         val.to_s.gsub(/([\\\t\n\r])/, '\\\\\\1')
       end
     end
