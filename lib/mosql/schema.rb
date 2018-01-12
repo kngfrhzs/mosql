@@ -305,6 +305,7 @@ module MoSQL
         pg.put_copy_end
         begin
           pg.get_result.check
+        end
       end
     end
 
