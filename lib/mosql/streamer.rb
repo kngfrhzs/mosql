@@ -152,7 +152,7 @@ module MoSQL
                 bulk_upsert(table, ns, batch)
               end
               elapsed = Time.now - start
-              log.info("Imported #{count} rows (#{elapsed}s, #{sql_time}s SQL)...")
+              log.info("Importedblablabla #{count} rows (#{elapsed}s, #{sql_time}s SQL)...")
               batch.clear
               exit(0) if @done
             end
