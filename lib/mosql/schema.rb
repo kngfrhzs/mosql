@@ -297,13 +297,14 @@ module MoSQL
         pg.execute(sql)
         log.info (sql)
         objs.each do |o|
+          log.info (o)
           pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
         end
         pg.put_copy_end
         begin
           pg.get_result.check
         rescue PGError => e
-          
+          db.send(:raise_error, e)
         end
       end
     end
