@@ -295,6 +295,8 @@ module MoSQL
         sql = "COPY \"#{schema[:meta][:table]}\" " +
           "(#{all_columns_for_copy(schema).map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
         pg.execute(sql)
+        log.info (sql)
+        log.info("Objeler '#{objs}'...")
         objs.each do |o|
           pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
         end
@@ -302,7 +304,6 @@ module MoSQL
         begin
           pg.get_result.check
         rescue PGError => e
-          log.info("Hata burada '#{objs}'...")
           db.send(:raise_error, e)
         end
       end
