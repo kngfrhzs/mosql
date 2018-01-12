@@ -296,7 +296,6 @@ module MoSQL
           "(#{all_columns_for_copy(schema).map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
         pg.execute(sql)
         log.info (sql)
-        log.info("Objeler '#{objs}'...")
         objs.each do |o|
           pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
         end
