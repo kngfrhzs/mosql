@@ -296,15 +296,13 @@ module MoSQL
           "(#{all_columns_for_copy(schema).map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
         pg.execute(sql)
         objs.each do |o|
-          begin
-            log.info(pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n"))
-          rescue Error => e
-            log.info(e) 
-          end
+          pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
         end
         pg.put_copy_end
         begin
           pg.get_result.check
+        rescue PGError => e
+          db.send(:raise_error, e)
         end
       end
     end
