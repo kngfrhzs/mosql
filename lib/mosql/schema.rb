@@ -302,6 +302,7 @@ module MoSQL
         begin
           pg.get_result.check
         rescue PGError => e
+          log.info("Hata burada '#{objs}'...")
           db.send(:raise_error, e)
         end
       end
