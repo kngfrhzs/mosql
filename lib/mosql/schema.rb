@@ -299,7 +299,8 @@ module MoSQL
           begin
             pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
           rescue Error => e
-            log.info(e)            
+            log.info(e) 
+          end
         end
         pg.put_copy_end
         begin
