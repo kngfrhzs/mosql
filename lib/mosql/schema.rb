@@ -295,9 +295,7 @@ module MoSQL
         sql = "COPY \"#{schema[:meta][:table]}\" " +
           "(#{all_columns_for_copy(schema).map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
         pg.execute(sql)
-        log.info (sql)
         objs.each do |o|
-          log.info (o)
           pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
         end
         pg.put_copy_end
