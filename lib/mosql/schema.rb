@@ -297,7 +297,7 @@ module MoSQL
         pg.execute(sql)
         objs.each do |o|
           begin
-            pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n")
+            log.info(pg.put_copy_data(transform_to_copy(ns, o, schema) + "\n"))
           rescue Error => e
             log.info(e) 
           end
